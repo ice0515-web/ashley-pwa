@@ -427,6 +427,67 @@
     .fade-up { animation: fadeUp 0.5s ease forwards; }
 
     /* ── Responsive ── */
+    /* ── Code Input Screen ── */
+    .code-screen-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      padding: 20px;
+    }
+    .code-logo { font-size: 52px; margin-bottom: 20px; }
+    .code-title {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      color: var(--c-text-dark);
+      margin-bottom: 10px;
+    }
+    .code-desc {
+      font-size: 13px;
+      color: var(--c-text-light);
+      line-height: 1.8;
+      margin-bottom: 28px;
+      max-width: 300px;
+    }
+    .code-input-wrap {
+      width: 100%;
+      max-width: 340px;
+      margin-bottom: 12px;
+    }
+    .code-input {
+      width: 100%;
+      padding: 14px 18px;
+      background: var(--c-card);
+      border: 1.5px solid var(--c-line);
+      border-radius: 14px;
+      font-family: 'Courier New', monospace;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--c-text-dark);
+      letter-spacing: 0.08em;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .code-input:focus { border-color: var(--c-primary); }
+    .code-input::placeholder { color: var(--c-text-light); font-family: var(--font-sans); letter-spacing: 0; font-size: 13px; font-weight: 400; }
+    .code-msg {
+      font-size: 13px;
+      min-height: 20px;
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+    .code-msg.error { color: #C0392B; }
+    .code-msg.success { color: var(--c-accent); }
+    .code-loading { color: var(--c-text-light); font-size: 13px; }
+    .code-skip {
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--c-text-light);
+    }
+
     @media (max-width: 480px) {
       .app-header h1 { font-size: 22px; }
       .question-text { font-size: 16px; }
@@ -463,6 +524,44 @@
         15 道題目・約需 3 分鐘
       </p>
       <button class="btn-primary" onclick="startQuiz()">開始體質測驗</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 0: CODE INPUT
+══════════════════════════════ -->
+<div id="screen-code" class="screen">
+  <div class="container">
+    <div class="code-screen-wrap">
+      <div class="code-logo">🗝️</div>
+      <div class="code-title">輸入你的專屬代碼</div>
+      <p class="code-desc">
+        感謝你支持愛旭黎的療癒時光！<br>
+        輸入你在募資平台獲得的代碼，<br>
+        即可解鎖 2027 完整身心曆。
+      </p>
+      <div class="code-input-wrap">
+        <input
+          class="code-input"
+          id="code-input"
+          type="text"
+          placeholder="ASHLEY-2027-XXXX-XXXX"
+          maxlength="20"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="characters"
+          spellcheck="false"
+          onkeydown="if(event.key==='Enter') submitCode()"
+        />
+      </div>
+      <div class="code-msg" id="code-msg"></div>
+      <button class="btn-primary" style="max-width:340px;width:100%;" onclick="submitCode()" id="code-btn">
+        驗證代碼
+      </button>
+      <div class="code-skip">
+        已驗證過？<span style="color:var(--c-primary);cursor:pointer;" onclick="checkSavedAccess()">直接進入</span>
+      </div>
     </div>
   </div>
 </div>
@@ -642,6 +741,12 @@
 //  在這裡貼上你的 Google Sheets CSV 網址
 //  (Google Sheets → 檔案 → 共用 → 發布到網路 → CSV)
 // ══════════════════════════════
+// ══════════════════════════════
+//  代碼驗證 API 網址
+//  部署 Apps Script 後，把網址貼在這裡
+// ══════════════════════════════
+const VERIFY_URL = "https://script.google.com/macros/s/AKfycbxAKJdpW2jFSL_XLkSHd5HTNvw2esWKvLStkvzlDeDgzlp99wokEZD3yGRjaddTlCfs/exec";
+
 const SHEETS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBZCRhu025ZHVzEWN983v1ETGC0MHOBv__iHXlY89zhTX9I1-xmEzJrD9qkUW84w/pub?gid=423838576&single=true&output=csv";
 
 // ══════════════════════════════
@@ -1068,10 +1173,95 @@ function renderCalendar(dosha) {
 }
 
 // ══════════════════════════════
+//  CODE VERIFICATION
+// ══════════════════════════════
+
+// Check if user already has valid access stored
+function checkSavedAccess() {
+  const access = localStorage.getItem('ashley-access-2027');
+  if (access === 'granted') {
+    const savedDosha = localStorage.getItem('ashley-dosha');
+    if (savedDosha) {
+      renderCalendar(savedDosha);
+      showScreen('screen-calendar');
+    } else {
+      showScreen('screen-welcome');
+    }
+  } else {
+    showScreen('screen-code');
+  }
+}
+
+async function submitCode() {
+  const input = document.getElementById('code-input');
+  const msgEl = document.getElementById('code-msg');
+  const btn   = document.getElementById('code-btn');
+  const code  = input.value.trim().toUpperCase();
+
+  if (!code) {
+    showCodeMsg('請輸入代碼', 'error');
+    return;
+  }
+
+  // Basic format check
+  if (!code.match(/^ASHLEY-2027-[A-Z0-9]{4}-[A-Z0-9]{4}$/)) {
+    showCodeMsg('代碼格式不正確，請確認是否完整輸入', 'error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = '驗證中…';
+  showCodeMsg('', '');
+
+  try {
+    if (!VERIFY_URL || VERIFY_URL === 'YOUR_APPS_SCRIPT_URL_HERE') {
+      // Dev mode: accept any valid-format code
+      grantAccess();
+      return;
+    }
+
+    const url = VERIFY_URL + '?code=' + encodeURIComponent(code);
+    const resp = await fetch(url);
+    const data = await resp.json();
+
+    if (data.success) {
+      showCodeMsg(data.message, 'success');
+      setTimeout(() => grantAccess(), 800);
+    } else {
+      showCodeMsg(data.message, 'error');
+      btn.disabled = false;
+      btn.textContent = '驗證代碼';
+    }
+  } catch (err) {
+    showCodeMsg('網路連線問題，請稍後再試', 'error');
+    btn.disabled = false;
+    btn.textContent = '驗證代碼';
+  }
+}
+
+function showCodeMsg(text, type) {
+  const el = document.getElementById('code-msg');
+  el.textContent = text;
+  el.className = 'code-msg ' + type;
+}
+
+function grantAccess() {
+  localStorage.setItem('ashley-access-2027', 'granted');
+  showScreen('screen-welcome');
+}
+
+// ══════════════════════════════
 //  APP INIT
 // ══════════════════════════════
 async function init() {
-  // Sheets 資料載入完畢再渲染，否則永遠顯示備案
+  // 先檢查是否有 2027 存取權
+  const access = localStorage.getItem('ashley-access-2027');
+  if (!access || access !== 'granted') {
+    showScreen('screen-code');
+    return;
+  }
+
+  // 有存取權：載入 Sheets 資料再渲染
   await fetchContentFromSheets();
 
   const savedDosha = localStorage.getItem('ashley-dosha');
