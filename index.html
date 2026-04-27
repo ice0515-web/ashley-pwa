@@ -1203,9 +1203,9 @@ async function submitCode() {
     return;
   }
 
-  // Basic format check
-  if (!code.match(/^ASHLEY-2027-[A-Z0-9]{4}-[A-Z0-9]{4}$/)) {
-    showCodeMsg('代碼格式不正確，請確認是否完整輸入', 'error');
+  // Basic format check: ASHLEY-2027-XXXX-XXXX (21 chars)
+  if (!code.match(/^ASHLEY-2027-[A-Z0-9]{4}-[A-Z0-9]{4}$/i)) {
+    showCodeMsg('代碼格式不正確，請確認是否完整輸入（共21碼）', 'error');
     return;
   }
 
