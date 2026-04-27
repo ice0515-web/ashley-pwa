@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>身心曆｜愛旭黎的療癒時光</title>
+  <meta name="description" content="探索你的阿育吠陀體質，每日接收專屬的節氣身心養生建議。由 Ashley 老師整合中醫與阿育吠陀智慧，陪伴你的身心轉化之旅。">
+  <meta name="theme-color" content="#C47A52">
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ── Design Tokens ── */
+    :root {
+      --c-bg: #F5EFE6;
+      --c-card: #FDFAF6;
+      --c-primary: #C47A52;
+      --c-primary-dark: #A3613D;
+      --c-accent: #7B9E7A;
+      --c-text-dark: #2E2720;
+      --c-text-body: #5D5548;
+      --c-text-light: #9D9086;
+      --c-line: rgba(158,126,106,0.15);
+      --font-serif: 'Noto Serif TC', serif;
+      --font-sans: 'Noto Sans TC', sans-serif;
+      --shadow-sm: 0 4px 20px rgba(0,0,0,0.04);
+      --shadow-md: 0 12px 30px rgba(0,0,0,0.08);
+      --radius: 20px;
+      /* Dosha colors */
+      --c-vata: #7B9BB5;
+      --c-pitta: #C47A52;
+      --c-kapha: #7B9E7A;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      width: 100%;
+      min-height: 100vh;
+      font-family: var(--font-sans);
+      background: var(--c-bg);
+      color: var(--c-text-body);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 20px 80px;
+    }
+
+    /* ── Screen Management ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── Header ── */
+    .app-header {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+    .app-header .brand {
+      font-family: var(--font-serif);
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--c-text-light);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+    }
+    .app-header h1 {
+      font-family: var(--font-serif);
+      font-size: 28px;
+      font-weight: 400;
+      color: var(--c-text-dark);
+      line-height: 1.4;
+      margin-bottom: 12px;
+    }
+    .app-header .subtitle {
+      font-size: 14px;
+      color: var(--c-text-light);
+      line-height: 1.8;
+    }
+
+    /* ── Divider ── */
+    .divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--c-line), transparent);
+      margin: 24px 0;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--c-card);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 16px;
+    }
+
+    /* ── Buttons ── */
+    .btn-primary {
+      display: block;
+      width: 100%;
+      padding: 16px 24px;
+      background: var(--c-primary);
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-family: var(--font-sans);
+      font-size: 15px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      text-align: center;
+    }
+    .btn-primary:hover { background: var(--c-primary-dark); }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 10px 20px;
+      background: transparent;
+      color: var(--c-text-light);
+      border: 1px solid var(--c-line);
+      border-radius: 50px;
+      font-family: var(--font-sans);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--c-primary); color: var(--c-primary); }
+
+    /* ── Welcome Screen ── */
+    .hero-symbol {
+      font-size: 48px;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    .welcome-intro {
+      font-family: var(--font-serif);
+      font-size: 15px;
+      line-height: 2;
+      color: var(--c-text-body);
+      margin-bottom: 24px;
+    }
+    .dosha-tags {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      margin: 20px 0 28px;
+    }
+    .dosha-tag {
+      padding: 6px 16px;
+      border-radius: 50px;
+      font-size: 13px;
+      font-family: var(--font-serif);
+    }
+    .tag-vata { background: rgba(123,155,181,0.15); color: var(--c-vata); }
+    .tag-pitta { background: rgba(196,122,82,0.15); color: var(--c-pitta); }
+    .tag-kapha { background: rgba(123,158,122,0.15); color: var(--c-kapha); }
+
+    /* ── Quiz Screen ── */
+    .quiz-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .progress-bar {
+      flex: 1;
+      height: 3px;
+      background: var(--c-line);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .progress-fill {
+      height: 100%;
+      background: var(--c-primary);
+      border-radius: 2px;
+      transition: width 0.4s ease;
+    }
+    .progress-text {
+      font-size: 12px;
+      color: var(--c-text-light);
+      white-space: nowrap;
+    }
+
+    .question-num {
+      font-size: 11px;
+      letter-spacing: 0.15em;
+      color: var(--c-primary);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+    .question-text {
+      font-family: var(--font-serif);
+      font-size: 18px;
+      font-weight: 400;
+      color: var(--c-text-dark);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      display: block;
+      width: 100%;
+      padding: 16px 20px;
+      background: var(--c-bg);
+      border: 1.5px solid var(--c-line);
+      border-radius: 14px;
+      font-family: var(--font-sans);
+      font-size: 14px;
+      color: var(--c-text-body);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+      line-height: 1.5;
+    }
+    .option-btn:hover {
+      border-color: var(--c-primary);
+      color: var(--c-primary-dark);
+      background: rgba(196,122,82,0.05);
+    }
+    .option-btn.selected {
+      border-color: var(--c-primary);
+      background: rgba(196,122,82,0.08);
+      color: var(--c-primary-dark);
+    }
+    .option-label {
+      display: inline-block;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--c-line);
+      text-align: center;
+      line-height: 22px;
+      font-size: 11px;
+      margin-right: 10px;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+
+    /* ── Result Screen ── */
+    .result-header {
+      text-align: center;
+      padding: 32px 0 24px;
+    }
+    .result-symbol { font-size: 56px; margin-bottom: 16px; }
+    .result-dosha-name {
+      font-family: var(--font-serif);
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--c-text-dark);
+      margin-bottom: 6px;
+    }
+    .result-subtitle {
+      font-size: 13px;
+      color: var(--c-text-light);
+      letter-spacing: 0.08em;
+    }
+
+    .dosha-bar-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+    .dosha-bar-label {
+      font-size: 13px;
+      color: var(--c-text-body);
+      width: 60px;
+      flex-shrink: 0;
+      font-family: var(--font-serif);
+    }
+    .dosha-bar-track {
+      flex: 1;
+      height: 6px;
+      background: var(--c-line);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .dosha-bar-fill {
+      height: 100%;
+      border-radius: 3px;
+      transition: width 1s ease;
+    }
+    .bar-vata { background: var(--c-vata); }
+    .bar-pitta { background: var(--c-pitta); }
+    .bar-kapha { background: var(--c-kapha); }
+    .dosha-bar-pct {
+      font-size: 12px;
+      color: var(--c-text-light);
+      width: 30px;
+      text-align: right;
+    }
+
+    .result-desc {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 2;
+      color: var(--c-text-body);
+    }
+
+    /* ── Calendar Screen ── */
+    .calendar-header {
+      padding: 36px 0 20px;
+    }
+    .solar-term-badge {
+      display: inline-block;
+      padding: 4px 14px;
+      background: rgba(196,122,82,0.12);
+      color: var(--c-primary);
+      border-radius: 50px;
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      margin-bottom: 14px;
+    }
+    .calendar-header h2 {
+      font-family: var(--font-serif);
+      font-size: 22px;
+      font-weight: 400;
+      color: var(--c-text-dark);
+      line-height: 1.4;
+      margin-bottom: 8px;
+    }
+    .calendar-header .date-text {
+      font-size: 13px;
+      color: var(--c-text-light);
+    }
+
+    .section-title {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--c-text-dark);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .tip-item {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--c-line);
+      font-size: 14px;
+      line-height: 1.8;
+      color: var(--c-text-body);
+    }
+    .tip-item:last-child { border-bottom: none; }
+    .tip-name {
+      font-weight: 500;
+      color: var(--c-text-dark);
+      margin-bottom: 3px;
+    }
+
+    .ashley-note {
+      border-left: 3px solid var(--c-primary);
+      padding: 16px 20px;
+      background: rgba(196,122,82,0.05);
+      border-radius: 0 14px 14px 0;
+      margin: 8px 0;
+    }
+    .ashley-note p {
+      font-family: var(--font-serif);
+      font-size: 14px;
+      line-height: 1.9;
+      color: var(--c-text-body);
+      font-style: italic;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--c-card);
+      border-top: 1px solid var(--c-line);
+      display: flex;
+      padding: 10px 0;
+      z-index: 100;
+    }
+    .nav-btn {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      font-size: 11px;
+      color: var(--c-text-light);
+      cursor: pointer;
+      padding: 4px 0;
+      border: none;
+      background: none;
+      font-family: var(--font-sans);
+      transition: color 0.2s;
+    }
+    .nav-btn.active { color: var(--c-primary); }
+    .nav-icon { font-size: 20px; }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-up { animation: fadeUp 0.5s ease forwards; }
+
+    /* ── Responsive ── */
+    @media (max-width: 480px) {
+      .app-header h1 { font-size: 22px; }
+      .question-text { font-size: 16px; }
+      .card { padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     SCREEN 1: WELCOME
+══════════════════════════════ -->
+<div id="screen-welcome" class="screen active">
+  <div class="container">
+    <div class="app-header fade-up">
+      <div class="brand">Healing Time with Ashley</div>
+      <h1>身心曆</h1>
+      <p class="subtitle">依你的阿育吠陀體質<br>每日陪伴你的身心養生</p>
+    </div>
+
+    <div class="card fade-up">
+      <div class="hero-symbol">🪷</div>
+      <p class="welcome-intro">
+        在開始之前，讓我們先了解你此刻的體質狀態。<br><br>
+        阿育吠陀認為，每個人都是三種能量的獨特組合——風型 Vata、火型 Pitta、水型 Kapha。
+        了解自己的主導體質，是一切自我照顧的起點。
+      </p>
+      <div class="dosha-tags">
+        <span class="dosha-tag tag-vata">風 Vata</span>
+        <span class="dosha-tag tag-pitta">火 Pitta</span>
+        <span class="dosha-tag tag-kapha">水 Kapha</span>
+      </div>
+      <p style="font-size:13px;color:var(--c-text-light);text-align:center;margin-bottom:24px;">
+        15 道題目・約需 3 分鐘
+      </p>
+      <button class="btn-primary" onclick="startQuiz()">開始體質測驗</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 2: QUIZ
+══════════════════════════════ -->
+<div id="screen-quiz" class="screen">
+  <div class="container">
+    <div class="app-header">
+      <div class="brand">體質測驗</div>
+    </div>
+
+    <div class="quiz-progress">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <span class="progress-text" id="progress-text">1 / 15</span>
+    </div>
+
+    <div class="card" id="question-card">
+      <div class="question-num" id="q-num">問題 1</div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+    </div>
+
+    <div style="text-align:center;margin-top:12px;">
+      <button class="btn-secondary" onclick="prevQuestion()" id="btn-prev" style="display:none">← 上一題</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 3: RESULT
+══════════════════════════════ -->
+<div id="screen-result" class="screen">
+  <div class="container">
+    <div class="result-header fade-up">
+      <div class="result-symbol" id="result-symbol">🌿</div>
+      <div class="result-dosha-name" id="result-name">風型 Vata</div>
+      <div class="result-subtitle" id="result-subtitle">你的主導體質</div>
+    </div>
+
+    <div class="card fade-up" id="dosha-bars-card">
+      <div class="dosha-bar-row">
+        <span class="dosha-bar-label">風 Vata</span>
+        <div class="dosha-bar-track"><div class="dosha-bar-fill bar-vata" id="bar-vata" style="width:0%"></div></div>
+        <span class="dosha-bar-pct" id="pct-vata">0%</span>
+      </div>
+      <div class="dosha-bar-row">
+        <span class="dosha-bar-label">火 Pitta</span>
+        <div class="dosha-bar-track"><div class="dosha-bar-fill bar-pitta" id="bar-pitta" style="width:0%"></div></div>
+        <span class="dosha-bar-pct" id="pct-pitta">0%</span>
+      </div>
+      <div class="dosha-bar-row">
+        <span class="dosha-bar-label">水 Kapha</span>
+        <div class="dosha-bar-track"><div class="dosha-bar-fill bar-kapha" id="bar-kapha" style="width:0%"></div></div>
+        <span class="dosha-bar-pct" id="pct-kapha">0%</span>
+      </div>
+    </div>
+
+    <div class="card fade-up" id="result-desc-card">
+      <p class="result-desc" id="result-desc-text"></p>
+    </div>
+
+    <div class="ashley-note fade-up">
+      <p id="result-ashley-note"></p>
+    </div>
+
+    <div style="margin-top:28px;" class="fade-up">
+      <button class="btn-primary" onclick="goToCalendar()">查看今日身心曆 →</button>
+      <div style="text-align:center;margin-top:12px;">
+        <button class="btn-secondary" onclick="retakeQuiz()">重新測驗</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════
+     SCREEN 4: DAILY CALENDAR
+══════════════════════════════ -->
+<div id="screen-calendar" class="screen">
+  <div class="container">
+    <div class="calendar-header fade-up">
+      <div class="solar-term-badge" id="cal-solar-term">✦ 驚蟄</div>
+      <h2 id="cal-title">今日身心曆</h2>
+      <div class="date-text" id="cal-date"></div>
+    </div>
+
+    <!-- Dosha badge -->
+    <div id="cal-dosha-badge" class="card fade-up" style="padding:16px 20px;">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span id="cal-dosha-icon" style="font-size:28px;"></span>
+        <div>
+          <div style="font-size:12px;color:var(--c-text-light);margin-bottom:2px;">你的主導體質</div>
+          <div id="cal-dosha-name" style="font-family:var(--font-serif);font-size:16px;color:var(--c-text-dark);"></div>
+        </div>
+        <button class="btn-secondary" onclick="goToResult()" style="margin-left:auto;font-size:11px;padding:6px 14px;">查看體質</button>
+      </div>
+    </div>
+
+    <!-- Daily focus -->
+    <div class="daily-focus-card card fade-up" style="background:rgba(196,122,82,0.06);border:1px solid rgba(196,122,82,0.2);">
+      <div style="font-size:11px;letter-spacing:0.12em;color:var(--c-primary);margin-bottom:6px;">TODAY'S FOCUS</div>
+      <div id="cal-daily-focus" style="font-family:var(--font-serif);font-size:16px;color:var(--c-text-dark);line-height:1.6;"></div>
+    </div>
+
+    <!-- Solar term intro -->
+    <div class="card fade-up">
+      <div class="section-title">
+        <span class="section-icon" style="background:rgba(196,122,82,0.12);color:var(--c-primary);">⚡</span>
+        <span id="cal-section-term-title">節氣 · 驚蟄</span>
+      </div>
+      <p id="cal-solar-intro" style="font-size:14px;line-height:1.9;color:var(--c-text-body);">
+        春雷乍響，萬物甦醒。驚蟄是陽氣由溫轉強的關鍵時刻，肝氣最旺，既要順應生發，也要守住平衡。
+      </p>
+    </div>
+
+    <!-- Diet section -->
+    <div class="card fade-up">
+      <div class="section-title">
+        <span class="section-icon" style="background:rgba(123,158,122,0.12);color:var(--c-accent);">🌿</span>
+        今日飲食建議
+      </div>
+      <div id="cal-diet"></div>
+    </div>
+
+    <!-- Acupressure section -->
+    <div class="card fade-up">
+      <div class="section-title">
+        <span class="section-icon" style="background:rgba(123,155,181,0.12);color:var(--c-vata);">🌀</span>
+        穴位按摩
+      </div>
+      <div id="cal-acupoint"></div>
+    </div>
+
+    <!-- Yoga section -->
+    <div class="card fade-up">
+      <div class="section-title">
+        <span class="section-icon" style="background:rgba(196,122,82,0.12);color:var(--c-primary);">🧘</span>
+        今日瑜珈練習
+      </div>
+      <div id="cal-yoga"></div>
+    </div>
+
+    <!-- Emotion section -->
+    <div class="card fade-up">
+      <div class="section-title">
+        <span class="section-icon" style="background:rgba(158,126,106,0.12);color:var(--c-text-light);">🪷</span>
+        今日情緒覺察
+      </div>
+      <div id="cal-emotion"></div>
+      <div class="ashley-note" style="margin-top:14px;">
+        <p id="cal-ashley-note"></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-btn" onclick="goToCalendar()">
+      <span class="nav-icon">🌿</span>今日曆
+    </button>
+    <button class="nav-btn" onclick="goToResult()">
+      <span class="nav-icon">✨</span>我的體質
+    </button>
+    <button class="nav-btn" onclick="retakeQuiz()">
+      <span class="nav-icon">🔄</span>重新測驗
+    </button>
+  </div>
+</div>
+
+
+<script>
+// ══════════════════════════════
+//  GOOGLE SHEETS CMS 設定
+//  在這裡貼上你的 Google Sheets CSV 網址
+//  (Google Sheets → 檔案 → 共用 → 發布到網路 → CSV)
+// ══════════════════════════════
+const SHEETS_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRBZCRhu025ZHVzEWN983v1ETGC0MHOBv__iHXlY89zhTX9I1-xmEzJrD9qkUW84w/pub?gid=423838576&single=true&output=csv";
+
+// ══════════════════════════════
+//  DATA: Quiz Questions
+
+// ══════════════════════════════
+const questions = [
+  {
+    text: "你的身體體型通常是？",
+    options: [
+      { text: "纖瘦、難以增重，骨架小", dosha: "V" },
+      { text: "中等、肌肉線條明顯，體重穩定", dosha: "P" },
+      { text: "豐潤、容易增重，骨架較寬", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的皮膚狀態通常是？",
+    options: [
+      { text: "乾燥、容易龜裂、皮膚薄", dosha: "V" },
+      { text: "偏油性、敏感、容易泛紅或長痘", dosha: "P" },
+      { text: "油性、毛孔粗、不易敏感", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的睡眠狀況通常是？",
+    options: [
+      { text: "睡眠淺、容易醒、有時失眠", dosha: "V" },
+      { text: "睡眠中等，偶爾因腦袋過轉睡不著", dosha: "P" },
+      { text: "睡得很沉、難以起床、常想賴床", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的消化狀況通常是？",
+    options: [
+      { text: "消化不規律、容易脹氣或便秘", dosha: "V" },
+      { text: "消化很好、胃口大、容易胃酸過多", dosha: "P" },
+      { text: "消化慢、容易感覺沉重、但食慾穩定", dosha: "K" }
+    ]
+  },
+  {
+    text: "你在壓力下的情緒反應通常是？",
+    options: [
+      { text: "焦慮、緊張、思緒停不下來", dosha: "V" },
+      { text: "急躁、易怒、想要掌控局面", dosha: "P" },
+      { text: "退縮、沉默、拖延、迴避", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的行動模式通常是？",
+    options: [
+      { text: "行動快、創意多、但難以持續", dosha: "V" },
+      { text: "有目標感、做事有效率、有競爭心", dosha: "P" },
+      { text: "行動較慢，但一旦開始就很持久", dosha: "K" }
+    ]
+  },
+  {
+    text: "天氣對你的影響是？",
+    options: [
+      { text: "怕冷、不喜歡風大或乾燥的天氣", dosha: "V" },
+      { text: "怕熱、不喜歡太陽直射、悶熱難受", dosha: "P" },
+      { text: "怕濕、不喜歡陰雨或潮濕天氣", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的記憶力特質是？",
+    options: [
+      { text: "學新事物快，但遺忘也快", dosha: "V" },
+      { text: "記憶精準，很少遺忘重要的事", dosha: "P" },
+      { text: "學得比較慢，但記憶長久且穩固", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的說話方式通常是？",
+    options: [
+      { text: "說話快、跳躍、常說到一半岔題", dosha: "V" },
+      { text: "說話直接、有說服力、愛表達意見", dosha: "P" },
+      { text: "說話緩慢、思考後才開口、聲音低沉", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的食慾模式通常是？",
+    options: [
+      { text: "食慾不規律，有時很餓有時忘記吃", dosha: "V" },
+      { text: "食慾旺盛，一定要準時吃飯", dosha: "P" },
+      { text: "可以很久不餓，但一旦吃起來愛吃", dosha: "K" }
+    ]
+  },
+  {
+    text: "你關節和骨骼的感受通常是？",
+    options: [
+      { text: "骨架纖細，關節有時有聲音或輕微不適", dosha: "V" },
+      { text: "關節靈活，肌肉有力量", dosha: "P" },
+      { text: "骨架較寬，關節穩固但有時感到沉重", dosha: "K" }
+    ]
+  },
+  {
+    text: "你休息時最喜歡做什麼？",
+    options: [
+      { text: "聽音樂、散步、改變環境、探索新地方", dosha: "V" },
+      { text: "閱讀、研究、學習新技能或完成任務", dosha: "P" },
+      { text: "睡覺、待在家、看電視、享受美食", dosha: "K" }
+    ]
+  },
+  {
+    text: "你對環境整潔的態度通常是？",
+    options: [
+      { text: "有時整齊有時凌亂，難以維持固定狀態", dosha: "V" },
+      { text: "喜歡整齊有序，對凌亂感到不舒服", dosha: "P" },
+      { text: "不太在意，習慣在舒適的環境中積累物品", dosha: "K" }
+    ]
+  },
+  {
+    text: "你每天早晨起床後的狀態通常是？",
+    options: [
+      { text: "需要一點時間進入狀態，思緒還在飄", dosha: "V" },
+      { text: "馬上清醒，很快有行動力和計劃", dosha: "P" },
+      { text: "非常昏沉，需要很長時間才能清醒", dosha: "K" }
+    ]
+  },
+  {
+    text: "你的學習風格通常是？",
+    options: [
+      { text: "喜歡跳躍式探索，對多種主題都感興趣", dosha: "V" },
+      { text: "喜歡深入鑽研，追求正確性和細節", dosha: "P" },
+      { text: "喜歡反覆練習和慢慢積累，需要時間消化", dosha: "K" }
+    ]
+  }
+];
+
+// ══════════════════════════════
+//  DATA: Dosha Info
+// ══════════════════════════════
+const doshaData = {
+  V: {
+    name: "風型 Vata",
+    symbol: "🌬️",
+    color: "var(--c-vata)",
+    desc: "你的主導能量是風與空間，輕盈、靈動而富有創意。Vata 型的你思維跳躍、感受敏銳、充滿想像力，在春天這個氣流最活躍的季節，更容易感受到能量的波動。",
+    ashleyNote: "留意到了嗎？當你的思緒跑得比身體還快，那正是風能量在告訴你：是時候放慢，往內感受腳踏實地的重量了。"
+  },
+  P: {
+    name: "火型 Pitta",
+    symbol: "🔥",
+    color: "var(--c-pitta)",
+    desc: "你的主導能量是火與水，明確、有力而善於轉化。Pitta 型的你意志清晰、目標導向、消化力強，在驚蟄這個火能開始活躍的時節，既有充沛的動力，也需要留意情緒的溫度。",
+    ashleyNote: "火的能量在你體內是禮物——它帶來清晰和行動力。而你真正的功課，或許是練習讓那把火照亮，而不是燃燒殆盡。"
+  },
+  K: {
+    name: "水型 Kapha",
+    symbol: "🌊",
+    color: "var(--c-kapha)",
+    desc: "你的主導能量是水與土，穩定、持久而充滿滋養力。Kapha 型的你情緒穩定、記憶深厚、有強大的支撐力量，在驚蟄天氣轉暖的時節，是身體積累的 Kapha 開始流動的好時機。",
+    ashleyNote: "你天生擁有一種讓人安心的品質。驚蟄告訴你，不需要很大的力量，只需要一個溫柔的啟動——讓沉積的能量，隨著春風慢慢流動起來。"
+  }
+};
+
+// ══════════════════════════════
+//  DATA: Daily Calendar Content
+//  (驚蟄 × 三體質)
+// ══════════════════════════════
+const calendarContent = {
+  V: {
+    diet: [
+      { name: "菠菜豆腐湯", desc: "菠菜養血柔肝，豆腐清熱平和。溫熱食用，幫助 Vata 的穩定感。" },
+      { name: "玫瑰花茶 + 紅棗", desc: "疏肝理氣，滋養肝血。風型人在春天容易血虛，紅棗是最溫柔的補充。" },
+      { name: "今日飲食原則", desc: "以溫熱、滋養為主，七分飽。避免生冷食物，早晨可喝一碗溫熱粥讓身體穩穩落地。" }
+    ],
+    acupoint: [
+      { name: "太衝穴（平肝第一穴）", desc: "腳背大腳趾和第二趾之間往上約兩指寬的凹陷處。每天按摩 5 分鐘，配合深呼吸，感受情緒慢慢沉澱。" },
+      { name: "足三里（補氣安神）", desc: "膝蓋下方三寸、脛骨外側。風型人消化不穩，每天溫和按壓此穴，幫助接地氣。" }
+    ],
+    yoga: [
+      { name: "樹式 Tree Pose — 扎根平衡", desc: "站姿平衡體式，讓飄動的 Vata 能量找到重心。保持 5–8 個呼吸，目光凝視前方一點，感受腳底與地面的連結。" },
+      { name: "坐姿前彎 — 安撫與收斂", desc: "雙腿伸直，吸氣延展脊柱，呼氣緩緩前彎。不要用力拉，讓重力自然帶領。前彎能安撫過度活躍的神經系統，幫助 Vata 沉靜。" }
+    ],
+    emotion: "風型人在驚蟄容易睡眠不穩、思緒飄散、情緒起伏。今天，試著觀察：你的焦慮感是從哪個身體部位開始升起的？胸口還是腹部？讓呼吸慢慢帶著你找到那個感受，只是觀察，不需要改變。",
+    ashleyNote: "規律，是風型人最好的藥。不是因為規律很容易，而是因為你的身體渴望一個可以依靠的節奏。今天，選一件事準時做——哪怕只是準時喝一杯溫水。"
+  },
+  P: {
+    diet: [
+      { name: "菊花枸杞茶", desc: "清肝明目，驚蟄時節火型人首選。杭白菊 5–8 朵、枸杞 10 顆，熱水沖泡 5 分鐘。" },
+      { name: "芹菜炒豆乾", desc: "芹菜是平肝降壓的經典食材，配上豆乾補充蛋白質，清淡爽口，正是火型人所需。" },
+      { name: "今日飲食原則", desc: "清淡涼潤為主，大量綠色蔬菜。避免辛辣、油炸、燒烤。這段時間生薑也要減少，不要讓火能量再往上升。" }
+    ],
+    acupoint: [
+      { name: "行間穴（瀉肝火）", desc: "大腳趾和第二趾之間的趾縫處。肝火旺時按摩這裡很有效，用大拇指掐按，每天 2–3 分鐘，感受熱氣往下散去。" },
+      { name: "期門穴（疏肝理氣）", desc: "乳頭直下第六肋間。雙手放在胸下兩側，配合深呼吸輕柔按摩。胸悶或兩脅脹痛時特別有幫助。" }
+    ],
+    yoga: [
+      { name: "坐姿前彎 — 降火安心", desc: "前彎是火型人的好朋友，能收斂過度外放的 Pitta 能量。保持 5–10 個呼吸，讓身體慢慢軟化，感受火能量向下沉降。" },
+      { name: "攤屍式 Savasana — 徹底放下", desc: "仰臥，全身放鬆。特別放鬆眉心（火型人容易眉頭緊鎖）和肩膀。停留 10–15 分鐘，想像熱度從頭頂緩緩流出。這對你來說也許最難，但也最需要。" }
+    ],
+    emotion: "Pitta 型的你在驚蟄容易急躁易怒，一點小事就爆發。今天，當你感到不耐煩時，先停下來做 10 次深呼吸，再按摩太衝穴。練習觀察：是什麼觸發了你？不需要批判，只是看見。",
+    ashleyNote: "你的敏銳和行動力是真正的禮物。而驚蟄提醒你的是——最強的火，不是燒得最猛的，而是控制得最好的。今天，讓清涼做你的朋友。"
+  },
+  K: {
+    diet: [
+      { name: "春筍排骨湯", desc: "春筍清熱化痰、生發陽氣，正是幫助 Kapha 從冬天的沉積中甦醒的好食材。配上排骨，清補不膩。" },
+      { name: "加入辛香料", desc: "適量薑黃、黑胡椒、薑絲可以幫助 Kapha 的代謝。在這個季節，辛香料是你的盟友，少量規律地加入料理中。" },
+      { name: "今日飲食原則", desc: "清淡為主，減少甜食和乳製品，這些會增加 Kapha 的停滯感。今天嘗試讓晚餐輕一點，讓身體有空間代謝。" }
+    ],
+    acupoint: [
+      { name: "太衝穴（啟動肝氣）", desc: "腳背大腳趾和第二趾之間往上約兩指寬的凹陷處。對 Kapha 型的你，按摩這裡能幫助停滯的能量流動，每天 5 分鐘。" },
+      { name: "豐隆穴（化痰祛濕）", desc: "小腿外側，膝蓋和腳踝中間點。驚蟄後天氣潮濕，Kapha 容易積累痰濕，每天按摩此穴幫助清理。" }
+    ],
+    yoga: [
+      { name: "側角伸展式 — 深度疏通", desc: "雙腿分開，右腳外轉 90 度，右膝彎曲，左手越過頭頂延伸。深度伸展肝經和膽經，正是 Kapha 在驚蟄最需要的疏通練習。換邊各保持 8–10 個呼吸。" },
+      { name: "坐姿扭轉 — 排毒啟動", desc: "扭轉能疏通肝氣，幫助 Kapha 排出積累的停滯感。感覺像在擰乾一條毛巾——慢慢扭轉，然後放開，讓新鮮能量流入。" }
+    ],
+    emotion: "水型人在驚蟄容易感到依賴、固執或退縮。今天，注意到有沒有什麼是你一直在「等待時機」卻遲遲沒有開始的事？驚蟄的春雷，就是一個邀請——不需要完全準備好，只需要一個小小的開始。",
+    ashleyNote: "你的穩定是大地一樣的禮物。而驚蟄告訴你，大地也需要被雷聲喚醒。今天，讓自己被那道雷聲觸動——輕輕地，但真實地。"
+  }
+};
+
+// ══════════════════════════════
+//  STATE
+// ══════════════════════════════
+let currentQ = 0;
+let answers = [];
+let scores = { V: 0, P: 0, K: 0 };
+let dominantDosha = null;
+
+// ══════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+// ══════════════════════════════
+//  QUIZ LOGIC
+// ══════════════════════════════
+function startQuiz() {
+  currentQ = 0;
+  answers = [];
+  scores = { V: 0, P: 0, K: 0 };
+  renderQuestion();
+  showScreen('screen-quiz');
+}
+
+function renderQuestion() {
+  const q = questions[currentQ];
+  const labels = ['A', 'B', 'C'];
+  const pct = Math.round((currentQ / questions.length) * 100);
+
+  document.getElementById('progress-fill').style.width = pct + '%';
+  document.getElementById('progress-text').textContent = (currentQ + 1) + ' / ' + questions.length;
+  document.getElementById('q-num').textContent = '問題 ' + (currentQ + 1);
+  document.getElementById('q-text').textContent = q.text;
+
+  const optHtml = q.options.map((opt, i) => `
+    <button class="option-btn ${answers[currentQ] === i ? 'selected' : ''}"
+            onclick="selectOption(${i})">
+      <span class="option-label">${labels[i]}</span>${opt.text}
+    </button>
+  `).join('');
+  document.getElementById('q-options').innerHTML = optHtml;
+
+  const prevBtn = document.getElementById('btn-prev');
+  prevBtn.style.display = currentQ > 0 ? 'inline-block' : 'none';
+}
+
+function selectOption(idx) {
+  answers[currentQ] = idx;
+  renderQuestion();
+
+  // Auto-advance after short delay
+  setTimeout(() => {
+    if (currentQ < questions.length - 1) {
+      currentQ++;
+      renderQuestion();
+    } else {
+      calculateResult();
+    }
+  }, 300);
+}
+
+function prevQuestion() {
+  if (currentQ > 0) {
+    currentQ--;
+    renderQuestion();
+  }
+}
+
+function calculateResult() {
+  scores = { V: 0, P: 0, K: 0 };
+  answers.forEach((ansIdx, qIdx) => {
+    const dosha = questions[qIdx].options[ansIdx].dosha;
+    scores[dosha]++;
+  });
+
+  const total = scores.V + scores.P + scores.K;
+  const pctV = Math.round((scores.V / total) * 100);
+  const pctP = Math.round((scores.P / total) * 100);
+  const pctK = 100 - pctV - pctP;
+
+  // Find dominant
+  dominantDosha = Object.keys(scores).reduce((a, b) => scores[a] > scores[b] ? a : b);
+
+  // Save to localStorage
+  localStorage.setItem('ashley-dosha', dominantDosha);
+  localStorage.setItem('ashley-scores', JSON.stringify({ V: pctV, P: pctP, K: pctK }));
+
+  showResultScreen(dominantDosha, { V: pctV, P: pctP, K: pctK });
+}
+
+// ══════════════════════════════
+//  RESULT SCREEN
+// ══════════════════════════════
+function showResultScreen(dosha, pcts) {
+  const data = doshaData[dosha];
+
+  document.getElementById('result-symbol').textContent = data.symbol;
+  document.getElementById('result-name').textContent = data.name;
+  document.getElementById('result-desc-text').textContent = data.desc;
+  document.getElementById('result-ashley-note').textContent = data.ashleyNote;
+
+  showScreen('screen-result');
+
+  // Animate bars after transition
+  setTimeout(() => {
+    document.getElementById('bar-vata').style.width = pcts.V + '%';
+    document.getElementById('bar-pitta').style.width = pcts.P + '%';
+    document.getElementById('bar-kapha').style.width = pcts.K + '%';
+    document.getElementById('pct-vata').textContent = pcts.V + '%';
+    document.getElementById('pct-pitta').textContent = pcts.P + '%';
+    document.getElementById('pct-kapha').textContent = pcts.K + '%';
+  }, 100);
+}
+
+function goToResult() {
+  const savedDosha = localStorage.getItem('ashley-dosha');
+  const savedScores = JSON.parse(localStorage.getItem('ashley-scores') || 'null');
+  if (savedDosha && savedScores) {
+    dominantDosha = savedDosha;
+    showResultScreen(savedDosha, savedScores);
+  } else {
+    showScreen('screen-welcome');
+  }
+}
+
+function retakeQuiz() {
+  showScreen('screen-welcome');
+}
+
+// ══════════════════════════════
+//  CALENDAR SCREEN
+// ══════════════════════════════
+async function goToCalendar() {
+  const savedDosha = localStorage.getItem('ashley-dosha');
+  if (!savedDosha) { showScreen('screen-welcome'); return; }
+  // 若 dailyMap 還是空的（例如首次或 Sheets 還沒載入），再試一次
+  if (Object.keys(dailyMap).length === 0) {
+    await fetchContentFromSheets();
+  }
+  dominantDosha = savedDosha;
+  renderCalendar(dominantDosha);
+  showScreen('screen-calendar');
+}
+
+function renderCalendar(dosha) {
+  const data = doshaData[dosha];
+  const content = getTodayContent(dosha);
+  if (!content) { showScreen('screen-welcome'); return; }
+  const solarTerm = content.solarTerm || getTodaySolarTerm();
+
+  // Date & solar term
+  const today = new Date();
+  const dateStr = today.toLocaleDateString('zh-TW', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+  document.getElementById('cal-date').textContent = dateStr;
+  document.getElementById('cal-title').textContent = "今日身心曆";
+
+  // Solar term display
+  const stSection = document.getElementById('cal-section-term-title');
+  if (stSection) stSection.textContent = "節氣 · " + solarTerm;
+  const stIntro = document.getElementById('cal-solar-intro');
+  if (stIntro) stIntro.textContent = content.intro || "";
+  document.getElementById('cal-solar-term').textContent = "✦ " + solarTerm;
+
+  // Daily focus (今日核心主題)
+  const focusEl = document.getElementById('cal-daily-focus');
+  if (focusEl) {
+    if (content.dailyFocus) {
+      focusEl.textContent = content.dailyFocus;
+      focusEl.closest('.daily-focus-card').style.display = "block";
+    } else {
+      focusEl.closest('.daily-focus-card').style.display = "none";
+    }
+  }
+
+  // Dosha badge
+  document.getElementById('cal-dosha-icon').textContent = data.symbol;
+  document.getElementById('cal-dosha-name').textContent = data.name;
+
+  // Diet
+  document.getElementById('cal-diet').innerHTML = content.diet.map(item => `
+    <div class="tip-item">
+      <div class="tip-name">${item.name}</div>
+      <div>${item.desc}</div>
+    </div>
+  `).join('');
+
+  // Acupoint
+  document.getElementById('cal-acupoint').innerHTML = content.acupoint.map(item => `
+    <div class="tip-item">
+      <div class="tip-name">${item.name}</div>
+      <div>${item.desc}</div>
+    </div>
+  `).join('');
+
+  // Yoga
+  document.getElementById('cal-yoga').innerHTML = content.yoga.map(item => `
+    <div class="tip-item">
+      <div class="tip-name">${item.name}</div>
+      <div>${item.desc}</div>
+    </div>
+  `).join('');
+
+  // Emotion
+  document.getElementById('cal-emotion').innerHTML = `<p style="font-size:14px;line-height:1.9;">${content.emotion}</p>`;
+  document.getElementById('cal-ashley-note').textContent = content.ashleyNote;
+}
+
+// ══════════════════════════════
+//  APP INIT
+// ══════════════════════════════
+async function init() {
+  // Sheets 資料載入完畢再渲染，否則永遠顯示備案
+  await fetchContentFromSheets();
+
+  const savedDosha = localStorage.getItem('ashley-dosha');
+  if (savedDosha) {
+    dominantDosha = savedDosha;
+    renderCalendar(dominantDosha);
+    showScreen('screen-calendar');
+  } else {
+    showScreen('screen-welcome');
+  }
+}
+
+// ══════════════════════════════
+//  GOOGLE SHEETS LOADER (每日版)
+// ══════════════════════════════
+
+function parseCSV(text) {
+  const lines = text.trim().split("\n");
+  const headers = lines[0].split(",").map(h => h.trim().replace(/^"|"$/g, ""));
+  return lines.slice(1).map(line => {
+    const values = [];
+    let cur = "", inQ = false;
+    for (const ch of line) {
+      if (ch === '"') { inQ = !inQ; }
+      else if (ch === "," && !inQ) { values.push(cur.trim()); cur = ""; }
+      else { cur += ch; }
+    }
+    values.push(cur.trim());
+    const obj = {};
+    headers.forEach((h, i) => { obj[h] = (values[i] || "").replace(/^"|"$/g, ""); });
+    return obj;
+  });
+}
+
+// todayKey → "YYYY-MM-DD"
+function todayKey() {
+  const d = new Date();
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}
+
+// Build lookup map: "YYYY-MM-DD_V" → content object
+let dailyMap = {};          // date+dosha → content
+let solarTermMap = {};      // date → { name, intro }
+
+function buildDailyMap(rows) {
+  rows.forEach(row => {
+    const key = row.date + "_" + row.dosha;
+    if (!row.date || !row.dosha) return;
+    dailyMap[key] = {
+      solarTerm:  row.solar_term || "",
+      intro:      row.solar_term_intro || "",
+      dailyFocus: row.daily_focus || "",
+      diet: [
+        { name: row.diet1_name, desc: row.diet1_desc },
+        { name: row.diet2_name, desc: row.diet2_desc },
+        { name: row.diet3_name, desc: row.diet3_desc },
+      ].filter(d => d.name),
+      acupoint: [
+        { name: row.acupoint1_name, desc: row.acupoint1_desc },
+        { name: row.acupoint2_name, desc: row.acupoint2_desc },
+      ].filter(a => a.name),
+      yoga: [
+        { name: row.yoga1_name, desc: row.yoga1_desc },
+        { name: row.yoga2_name, desc: row.yoga2_desc },
+      ].filter(y => y.name),
+      emotion:    row.emotion || "",
+      ashleyNote: row.ashley_note || "",
+    };
+    solarTermMap[row.date] = row.solar_term || "";
+  });
+}
+
+async function fetchContentFromSheets() {
+  if (!SHEETS_URL || SHEETS_URL === "YOUR_GOOGLE_SHEETS_CSV_URL_HERE") return;
+  try {
+    const resp = await fetch(SHEETS_URL);
+    if (!resp.ok) throw new Error("HTTP " + resp.status);
+    const text = await resp.text();
+    if (!text || text.trim().length < 10) throw new Error("空白回應");
+    buildDailyMap(parseCSV(text));
+    console.log("✅ Sheets 載入完成，今日鍵：" + todayKey() + "，共", Object.keys(dailyMap).length, "筆記錄");
+    console.log("📋 可用日期：", [...new Set(Object.keys(dailyMap).map(k => k.split("_")[0]))].sort().join(", "));
+  } catch (e) {
+    console.warn("⚠️ 無法連接 Sheets，使用內建資料。原因：", e.message);
+  }
+}
+
+// Get today's content for a given dosha
+// Falls back to hardcoded calendarContent if no Sheets data
+function getTodayContent(dosha) {
+  const key = todayKey() + "_" + dosha;
+  if (dailyMap[key]) return dailyMap[key];
+  // Hardcoded fallback (驚蟄)
+  const fb = calendarContent[dosha];
+  if (fb) return { ...fb, solarTerm: "驚蟄", intro: "春雷乍響，萬物甦醒。", dailyFocus: "" };
+  return null;
+}
+
+function getTodaySolarTerm() {
+  return solarTermMap[todayKey()] || "驚蟄";
+}
+
+// ══════════════════════════════
+//  Register Service Worker for PWA
+// ══════════════════════════════
+//  Register Service Worker for PWA
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+init();
+</script>
+</body>
+</html>
